@@ -1,1 +1,0 @@
-# strengjavera.ae.is
