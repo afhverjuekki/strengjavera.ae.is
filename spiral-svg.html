@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concentric Spiral Text Effect (SVG)</title>
+    <style>
+        @font-face {
+            font-family: 'Season VF';
+            /* src: url('https://æ.is/fonts/SeasonMixVFUprights.woff2') format('woff2'); */
+            src: url('https://æ.is/fonts/SeasonVFTRIALVF.woff2') format('woff2');
+        }
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #121212;
+            font-family: 'Season VF', serif;
+            font-weight: 420 900;
+            font-variation-settings: 'wght' 300, 'SERF' 100;
+            font-feature-settings: 'ss01' 1, 'ss02' 1, 'ss03' 1, 'ss04' 1, 'ss05' 1, 'zero' 1;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("img/strengjavera_wide.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            filter: blur(30px);
+            z-index: -1;
+        }
+        
+        svg {
+            display: block;
+            width: 100%;
+            height: 100vh;
+        }
+        text {
+            font-family: 'Season VF', serif;
+            font-weight: 420 900;
+            font-variation-settings: 'wght' 300, 'SERF' 100;
+            font-feature-settings: 'ss01' 1, 'ss02' 1, 'ss03' 1, 'ss04' 1, 'ss05' 1, 'zero' 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="background"></div>
+    <svg id="svg-container"></svg>
+    
+    <!-- Import dat.gui library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.9/dat.gui.min.js"></script>
+    
+    <script>
+        const svgContainer = document.getElementById('svg-container');
+        
+        // Configuration object for dat.gui
+        const config = {
+            text: "1. Ætlunin var að skrifa um mig og þig, semsagt um okkur. Ég ætlaði að færa mig nær þér og þig nær mér, okkur nær okkur 2. Ég hélt að leiðin til að færa mig nær þér, væri að hugsa um muninn á okkur og hinum, en það reyndist ekki vera rétt. 3. Það var óumflýjanlegt að komast að öðru. Get sagt þér barnalega sögu svo þú skiljir mig betur, í næsta húsi við mig þegar 4. ég var lítil, bjó stelpa sem var algjör geimvera, óþægileg. Ég vildi ekkert með hana hafa og mig langaði ekki að við ættum 5. eitthvað sameiginlegt því hún var svona viðundur. Fjölskyldan hennar flutti til útlanda og ég sá hana aldrei framar, ég var",
+            fontSize: 16,
+            spiralTightness: -0.35,
+            rotation: 270,
+            initialRadius: 450,
+            charSpacing: 70,
+            repeatCount: 1,
+            textColor: "#ffffff"
+        };
+        
+        // Function to rotate the spiral by 5 degrees
+        function rotateStep() {
+            config.rotation = (config.rotation + 5) % 360;
+            drawSpiralText();
+        }
+        
+        // Function to download the SVG
+        function downloadSVG() {
+            // Get the SVG element
+            const svgElement = document.getElementById('svg-container');
+            
+            // Create a clone of the SVG to modify for download
+            const svgClone = svgElement.cloneNode(true);
+            
+            // Set explicit dimensions
+            svgClone.setAttribute('width', window.innerWidth);
+            svgClone.setAttribute('height', window.innerHeight);
+            
+            // Add font definitions to ensure text renders correctly when downloaded
+            const styleElement = document.createElementNS("http://www.w3.org/2000/svg", "style");
+            styleElement.textContent = `
+                @font-face {
+                    font-family: 'Season VF';
+                    src: url('https://æ.is/fonts/SeasonVFTRIALVF.woff2') format('woff2');
+                }
+                text {
+                    font-family: 'Season VF', serif;
+                    font-weight: 420 900;
+                    font-variation-settings: 'wght' 300, 'SERF' 100;
+                    font-feature-settings: 'ss01' 1, 'ss02' 1, 'ss03' 1, 'ss04' 1, 'ss05' 1, 'zero' 1;
+                }
+            `;
+            svgClone.prepend(styleElement);
+            
+            // Convert SVG to a data URL
+            const svgData = new XMLSerializer().serializeToString(svgClone);
+            const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
+            const svgUrl = URL.createObjectURL(svgBlob);
+            
+            // Create a download link
+            const downloadLink = document.createElement('a');
+            downloadLink.href = svgUrl;
+            downloadLink.download = 'spiral-text.svg';
+            
+            // Trigger download
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+            
+            // Clean up
+            URL.revokeObjectURL(svgUrl);
+        }
+        
+        // Initialize dat.gui
+        const gui = new dat.GUI();
+        gui.add(config, 'text').onChange(drawSpiralText);
+        gui.add(config, 'fontSize', 10, 60, 1).onChange(drawSpiralText);
+        gui.add(config, 'spiralTightness', -10, 10, 0.01).onChange(drawSpiralText);
+        gui.add(config, 'rotation', 0, 360, 5).onChange(drawSpiralText);
+        gui.add(config, 'initialRadius', 30, 500, 1).onChange(drawSpiralText);
+        gui.add(config, 'charSpacing', 5, 500, 1).onChange(drawSpiralText);
+        gui.add(config, 'repeatCount', 1, 100, 1).onChange(drawSpiralText);
+        gui.addColor(config, 'textColor').onChange(drawSpiralText);
+        gui.add({ rotateStep: rotateStep }, 'rotateStep').name('Rotate Step');
+        gui.add({ downloadSVG: downloadSVG }, 'downloadSVG').name('Download SVG');
+        
+        // Resize handler
+        function resizeSVG() {
+            svgContainer.setAttribute('width', window.innerWidth);
+            svgContainer.setAttribute('height', window.innerHeight);
+            svgContainer.setAttribute('viewBox', `0 0 ${window.innerWidth} ${window.innerHeight}`);
+            drawSpiralText();
+        }
+        
+        window.addEventListener('resize', resizeSVG);
+        resizeSVG();
+        
+        // Draw spiral text
+        function clearSVG() {
+            while (svgContainer.firstChild) {
+                svgContainer.removeChild(svgContainer.firstChild);
+            }
+        }
+
+        function getRepeatedText() {
+            // Create repeated text based on config.repeatCount
+            let allText = '';
+            for (let i = 0; i < config.repeatCount; i++) {
+                allText += config.text;
+            }
+            
+            // Split the text into words, preserving spaces with the preceding word
+            const words = [];
+            let currentWord = '';
+            
+            for (let i = 0; i < allText.length; i++) {
+                const char = allText[i];
+                currentWord += char;
+                
+                // If we encounter a space and it's not the first character of a word,
+                // or if we're at the end of the text, add the current word to the words array
+                if ((char === ' ' && currentWord.length > 1) || i === allText.length - 1) {
+                    words.push(currentWord);
+                    currentWord = '';
+                }
+            }
+            
+            // If there's any remaining text in currentWord, add it to words
+            if (currentWord) {
+                words.push(currentWord);
+            }
+            
+            return words;
+        }
+
+        function calculateSpiralPosition(angle, radius, centerX, centerY) {
+            // Convert polar coordinates (angle, radius) to Cartesian coordinates (x, y)
+            return {
+                x: centerX + Math.cos(angle) * radius,
+                y: centerY + Math.sin(angle) * radius
+            };
+        }
+
+        function calculateNextAngle(currentRadius, charWidth) {
+            // Improved spacing algorithm with more consistent visual results
+            // Uses a fixed arc length based on font size rather than individual character width
+            
+            // Base spacing using fixed proportion of fontSize for consistency
+            const baseFontSpacing = config.fontSize * 0.8;
+            
+            // Apply user-controlled spacing factor
+            const spacingFactor = config.charSpacing / 100;
+            
+            // Calculate arc length with more consistent spacing
+            const arcLength = (baseFontSpacing + charWidth * 0.3) * spacingFactor;
+            
+            // Calculate angle based on current radius
+            return arcLength / Math.max(currentRadius, 1);
+        }
+
+        function handleNegativeRadius(currentRadius) {
+            // If radius is too small, calculate angle increment using base measurements
+            if (currentRadius <= 0) {
+                const baseArcLength = config.fontSize * (config.charSpacing / 100);
+                return baseArcLength / Math.max(config.initialRadius, 1);
+            }
+            return null;
+        }
+
+        function calculateTangentAngle(angle, initialRadius, spiralTightness) {
+            // Calculate the radius based on spiral tightness
+            const radius = initialRadius + (spiralTightness * angle * 20);
+            
+            // For an Archimedean spiral, the tangent angle is the angle itself
+            // plus an adjustment based on the rate of change of radius with angle
+            let tangentAngle = angle;
+            
+            if (spiralTightness !== 0) {
+                // Calculate the rate of change of radius with angle (b)
+                const b = spiralTightness * 20;
+                
+                // Calculate tangent angle adjustment
+                // The formula is atan(r/b) where r is radius and b is rate of change
+                const adjustment = Math.atan(radius / b);
+                
+                // Apply the adjustment to the angle
+                tangentAngle = angle + adjustment;
+                
+                // Add a small offset to better align text with spiral direction
+                // This may need to be adjusted based on visual inspection
+                if (b < 0) {
+                    // For inward spirals, add PI to flip text direction
+                    tangentAngle += Math.PI;
+                }
+            }
+            
+            // Convert to degrees and return
+            return tangentAngle * (180/Math.PI);
+        }
+
+        function createTextElement(char, x, y, angle) {
+            const textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            textElement.setAttribute('x', '0');
+            textElement.setAttribute('y', '0');
+            textElement.setAttribute('fill', config.textColor);
+            textElement.setAttribute('font-size', config.fontSize);
+            textElement.setAttribute('text-anchor', 'middle');
+            textElement.setAttribute('dominant-baseline', 'middle');
+            
+            // Calculate the tangent angle using the dedicated function
+            const tangentAngle = calculateTangentAngle(angle, config.initialRadius, config.spiralTightness);
+            textElement.setAttribute('transform', `translate(${x}, ${y}) rotate(${tangentAngle})`);
+            
+            textElement.textContent = char;
+            return textElement;
+        }
+
+        function estimateCharWidth(char) {
+            // Create a temporary SVG text element to measure text width
+            // This is a simplified approach - in a production environment you might want to cache these measurements
+            const tempText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            tempText.setAttribute('font-size', config.fontSize);
+            tempText.setAttribute('font-family', 'Season VF');
+            tempText.textContent = char;
+            tempText.style.visibility = 'hidden';
+            svgContainer.appendChild(tempText);
+            
+            // Get the bounding box
+            const bbox = tempText.getBBox();
+            const width = bbox.width;
+            
+            // Remove the temporary element
+            svgContainer.removeChild(tempText);
+            
+            return width;
+        }
+
+        function drawSpiralText() {
+            // Calculate center point of the SVG
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            
+            clearSVG();
+            
+            const words = getRepeatedText();
+            // Convert rotation from degrees to radians for initial angle
+            let currentAngle = (config.rotation * Math.PI) / 180;
+            let currentRadius = config.initialRadius;
+            
+            // Create a main group for all text elements
+            const mainGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            svgContainer.appendChild(mainGroup);
+            
+            // Sample characters to estimate average width
+            const sampleText = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ÁÉÍÓÚÝÞÆÖÐáéíóúýþæöð";
+            let totalWidth = 0;
+            for (let i = 0; i < sampleText.length; i++) {
+                totalWidth += estimateCharWidth(sampleText[i]);
+            }
+            const avgCharWidth = totalWidth / sampleText.length;
+            
+            // Process all words
+            const spiralState = { currentAngle, currentRadius };
+            for (let wordIndex = 0; wordIndex < words.length; wordIndex++) {
+                processWord(words[wordIndex], wordIndex, mainGroup, spiralState, centerX, centerY, avgCharWidth);
+            }
+        }
+        
+        function createWordGroup(wordIndex, parentGroup) {
+            // Create a group for this word
+            const wordGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            wordGroup.setAttribute('class', 'word-group');
+            wordGroup.setAttribute('data-word-index', wordIndex);
+            parentGroup.appendChild(wordGroup);
+            return wordGroup;
+        }
+        
+        function processWord(word, wordIndex, parentGroup, spiralState, centerX, centerY, avgCharWidth) {
+            const wordGroup = createWordGroup(wordIndex, parentGroup);
+            const characters = word.split('');
+            
+            // Process each character in the word
+            for (let charIndex = 0; charIndex < characters.length; charIndex++) {
+                processChar(characters[charIndex], wordGroup, spiralState, centerX, centerY, avgCharWidth);
+            }
+        }
+        
+        function processChar(char, wordGroup, spiralState, centerX, centerY, avgCharWidth) {
+            // Calculate the current radius based on spiral tightness
+            spiralState.currentRadius = config.initialRadius + (config.spiralTightness * spiralState.currentAngle * 20);
+            
+            // Check if radius is too small and get angle increment if needed
+            const baseAngleIncrement = handleNegativeRadius(spiralState.currentRadius);
+            if (baseAngleIncrement !== null) {
+                spiralState.currentAngle += baseAngleIncrement;
+                return;
+            }
+            
+            const position = calculateSpiralPosition(spiralState.currentAngle, spiralState.currentRadius, centerX, centerY);
+            const textElement = createTextElement(char, position.x, position.y, spiralState.currentAngle);
+            wordGroup.appendChild(textElement);
+            
+            // Estimate character width
+            const charWidth = estimateCharWidth(char);
+            
+            // For very narrow characters, boost their width slightly to improve spacing
+            const adjustedWidth = charWidth < avgCharWidth * 0.7 ? 
+                charWidth * 0.4 : charWidth;
+            
+            spiralState.currentAngle += calculateNextAngle(spiralState.currentRadius, adjustedWidth);
+        }
+    </script>
+</body>
+</html> 
