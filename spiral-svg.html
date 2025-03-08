@@ -34,7 +34,7 @@
             background-image: url("img/strengjavera_wide.jpg");
             background-size: cover;
             background-repeat: no-repeat;
-            filter: blur(30px);
+            filter: blur(5px);
             z-index: -1;
         }
         
@@ -63,14 +63,24 @@
         
         // Configuration object for dat.gui
         const config = {
-            text: "1. Ætlunin var að skrifa um mig og þig, semsagt um okkur. Ég ætlaði að færa mig nær þér og þig nær mér, okkur nær okkur 2. Ég hélt að leiðin til að færa mig nær þér, væri að hugsa um muninn á okkur og hinum, en það reyndist ekki vera rétt. 3. Það var óumflýjanlegt að komast að öðru. Get sagt þér barnalega sögu svo þú skiljir mig betur, í næsta húsi við mig þegar 4. ég var lítil, bjó stelpa sem var algjör geimvera, óþægileg. Ég vildi ekkert með hana hafa og mig langaði ekki að við ættum 5. eitthvað sameiginlegt því hún var svona viðundur. Fjölskyldan hennar flutti til útlanda og ég sá hana aldrei framar, ég var",
+            text: "1. Ætlunin var að skrifa um mig og þig, semsagt um okkur. Ég ætlaði að færa mig nær þér og þig nær mér, okkur nær okkur 2. Ég hélt að leiðin til að færa mig nær þér, væri að hugsa um muninn á okkur og hinum, en það reyndist ekki vera rétt. 3. Það var óumflýjanlegt að komast að öðru. Get sagt þér barnalega sögu svo þú skiljir mig betur, í næsta húsi við mig þegar 4. ég var lítil, bjó stelpa sem var algjör geimvera, óþægileg. Ég vildi ekkert með hana hafa og mig langaði ekki að við ættum 5. eitthvað sameiginlegt því hún var svona viundur. Fjölskyldan hennar flutti til útlanda og ég sá hana aldrei framar, ég var",
             fontSize: 16,
             spiralTightness: -0.35,
             rotation: 270,
             initialRadius: 450,
-            charSpacing: 70,
+            charSpacing: 140,
             repeatCount: 1,
-            textColor: "#ffffff"
+            textColor: "#ffffff",
+            scaleX: 1,
+            scaleY: 1,
+            scaleXsinAmp: 1,
+            scaleXsinFreq: 0.1,
+            scaleXsinPhase: 0,
+            scaleYsinAmp: 1,
+            scaleYsinFreq: 0.2,
+            scaleYsinPhase: 0.1,
+            fontWeight: 300,
+            fontSerf: 100
         };
         
         // Function to rotate the spiral by 5 degrees
@@ -135,6 +145,26 @@
         gui.add(config, 'initialRadius', 30, 500, 1).onChange(drawSpiralText);
         gui.add(config, 'charSpacing', 5, 500, 1).onChange(drawSpiralText);
         gui.add(config, 'repeatCount', 1, 100, 1).onChange(drawSpiralText);
+        gui.add(config, 'scaleX', -1, 1, 0.1).onChange(drawSpiralText);
+        gui.add(config, 'scaleY', -1, 1, 0.1).onChange(drawSpiralText);
+        
+        // X sine modulation controls
+        const xSineFolder = gui.addFolder('X Sine Modulation');
+        xSineFolder.add(config, 'scaleXsinAmp', -1, 1, 0.1).onChange(drawSpiralText).name('Amplitude');
+        xSineFolder.add(config, 'scaleXsinFreq', 0, 1, 0.01).onChange(drawSpiralText).name('Frequency');
+        xSineFolder.add(config, 'scaleXsinPhase', 0, Math.PI * 2, 0.1).onChange(drawSpiralText).name('Phase');
+        
+        // Y sine modulation controls
+        const ySineFolder = gui.addFolder('Y Sine Modulation');
+        ySineFolder.add(config, 'scaleYsinAmp', -1, 1, 0.1).onChange(drawSpiralText).name('Amplitude');
+        ySineFolder.add(config, 'scaleYsinFreq', 0, 1, 0.01).onChange(drawSpiralText).name('Frequency');
+        ySineFolder.add(config, 'scaleYsinPhase', 0, Math.PI * 2, 0.1).onChange(drawSpiralText).name('Phase');
+        
+        // Font variation settings
+        const fontFolder = gui.addFolder('Font Variations');
+        fontFolder.add(config, 'fontWeight', 300, 900, 1).onChange(drawSpiralText).name('Weight (wght)');
+        fontFolder.add(config, 'fontSerf', 0, 100, 1).onChange(drawSpiralText).name('Serif (SERF)');
+        
         gui.addColor(config, 'textColor').onChange(drawSpiralText);
         gui.add({ rotateStep: rotateStep }, 'rotateStep').name('Rotate Step');
         gui.add({ downloadSVG: downloadSVG }, 'downloadSVG').name('Download SVG');
@@ -253,7 +283,30 @@
             return tangentAngle * (180/Math.PI);
         }
 
-        function createTextElement(char, x, y, angle) {
+        function calculateSineModulation(amplitude, frequency, phase, charIndex) {
+            return amplitude * Math.sin(charIndex * frequency + phase);
+        }
+
+        function calculateScales(charIndex) {
+            const sineModulationX = calculateSineModulation(
+                config.scaleXsinAmp,
+                config.scaleXsinFreq,
+                config.scaleXsinPhase,
+                charIndex
+            );
+            const sineModulationY = calculateSineModulation(
+                config.scaleYsinAmp,
+                config.scaleYsinFreq,
+                config.scaleYsinPhase,
+                charIndex
+            );
+            return {
+                x: config.scaleX + sineModulationX,
+                y: config.scaleY + sineModulationY
+            };
+        }
+
+        function createTextElement(char, x, y, angle, charIndex) {
             const textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
             textElement.setAttribute('x', '0');
             textElement.setAttribute('y', '0');
@@ -262,9 +315,19 @@
             textElement.setAttribute('text-anchor', 'middle');
             textElement.setAttribute('dominant-baseline', 'middle');
             
+            // Update font variation settings
+            textElement.style.fontVariationSettings = `'wght' ${config.fontWeight}, 'SERF' ${config.fontSerf}`;
+            
             // Calculate the tangent angle using the dedicated function
             const tangentAngle = calculateTangentAngle(angle, config.initialRadius, config.spiralTightness);
-            textElement.setAttribute('transform', `translate(${x}, ${y}) rotate(${tangentAngle})`);
+            
+            // Calculate scales using the new function
+            const scales = calculateScales(charIndex);
+            
+            // Add character scaling transform with sine modulation for both X and Y
+            textElement.setAttribute('transform', 
+                `translate(${x}, ${y}) rotate(${tangentAngle}) scale(${scales.x}, ${scales.y})`
+            );
             
             textElement.textContent = char;
             return textElement;
@@ -314,10 +377,11 @@
             }
             const avgCharWidth = totalWidth / sampleText.length;
             
-            // Process all words
+            // Process all words with character indexing
             const spiralState = { currentAngle, currentRadius };
+            let currentCharIndex = 0;
             for (let wordIndex = 0; wordIndex < words.length; wordIndex++) {
-                processWord(words[wordIndex], wordIndex, mainGroup, spiralState, centerX, centerY, avgCharWidth);
+                currentCharIndex = processWord(words[wordIndex], wordIndex, mainGroup, spiralState, centerX, centerY, avgCharWidth, currentCharIndex);
             }
         }
         
@@ -330,17 +394,19 @@
             return wordGroup;
         }
         
-        function processWord(word, wordIndex, parentGroup, spiralState, centerX, centerY, avgCharWidth) {
+        function processWord(word, wordIndex, parentGroup, spiralState, centerX, centerY, avgCharWidth, startCharIndex) {
             const wordGroup = createWordGroup(wordIndex, parentGroup);
             const characters = word.split('');
             
             // Process each character in the word
             for (let charIndex = 0; charIndex < characters.length; charIndex++) {
-                processChar(characters[charIndex], wordGroup, spiralState, centerX, centerY, avgCharWidth);
+                processChar(characters[charIndex], wordGroup, spiralState, centerX, centerY, avgCharWidth, startCharIndex + charIndex);
             }
+            
+            return startCharIndex + characters.length;
         }
         
-        function processChar(char, wordGroup, spiralState, centerX, centerY, avgCharWidth) {
+        function processChar(char, wordGroup, spiralState, centerX, centerY, avgCharWidth, charIndex) {
             // Calculate the current radius based on spiral tightness
             spiralState.currentRadius = config.initialRadius + (config.spiralTightness * spiralState.currentAngle * 20);
             
@@ -352,7 +418,7 @@
             }
             
             const position = calculateSpiralPosition(spiralState.currentAngle, spiralState.currentRadius, centerX, centerY);
-            const textElement = createTextElement(char, position.x, position.y, spiralState.currentAngle);
+            const textElement = createTextElement(char, position.x, position.y, spiralState.currentAngle, charIndex);
             wordGroup.appendChild(textElement);
             
             // Estimate character width
