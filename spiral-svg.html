@@ -63,12 +63,13 @@
         
         // Configuration object for dat.gui
         const config = {
-            text: "1. Ætlunin var að skrifa um mig og þig, semsagt um okkur. Ég ætlaði að færa mig nær þér og þig nær mér, okkur nær okkur 2. Ég hélt að leiðin til að færa mig nær þér, væri að hugsa um muninn á okkur og hinum, en það reyndist ekki vera rétt. 3. Það var óumflýjanlegt að komast að öðru. Get sagt þér barnalega sögu svo þú skiljir mig betur, í næsta húsi við mig þegar 4. ég var lítil, bjó stelpa sem var algjör geimvera, óþægileg. Ég vildi ekkert með hana hafa og mig langaði ekki að við ættum 5. eitthvað sameiginlegt því hún var svona viundur. Fjölskyldan hennar flutti til útlanda og ég sá hana aldrei framar, ég var",
-            fontSize: 16,
-            spiralTightness: -0.35,
+            // text: "Strengjavera - Jack Armitage - Side A - 1. Ætlunin var að skrifa um mig og þig, semsagt um okkur. Ég ætlaði að færa mig nær þér og þig nær mér, okkur nær okkur 2. Ég hélt að leiðin til að færa mig nær þér, væri að hugsa um muninn á okkur og hinum, en það reyndist ekki vera rétt. 3. Það var óumflýjanlegt að komast að öðru. Get sagt þér barnalega sögu svo þú skiljir mig betur, í næsta húsi við mig þegar 4. ég var lítil, bjó stelpa sem var algjör geimvera, óþægileg. Ég vildi ekkert með hana hafa og mig langaði ekki að við ættum 5. eitthvað sameiginlegt því hún var svona viundur. Fjölskyldan hennar flutti til útlanda og ég sá hana aldrei framar, ég var",
+            text: "Strengjavera - Jack Armitage - Side B - 6. fegin þá en málið er að hún skildi eitthvað eftir innra með mér. Það var nýtt líffæri sem stækkaði í fjarlægðinni, eins og 7. dökkur ávöxtur, eitthvað þrútið sem gaf frá sér ilm og fyrirheit, loforð um líf en hótun um rotnun ef það gleymdist, ég 8. get ekki lýst því öðruvísi. Það kemur fyrir þegar ég tala um hana að ég segi ósjálfrátt við en ekki hún. Þannig komst ég 9. að því að skilin milli mín og hinna, okkar og þeirra, eru tilbúningur. Það eru engin þau eða hin bara við, ég og þú og við. 10. Einu eftirlifendurnir í rauninni.",
+            fontSize: 10,
+            spiralTightness: -0.16,
             rotation: 270,
-            initialRadius: 450,
-            charSpacing: 140,
+            initialRadius: 180,
+            charSpacing: 75,
             repeatCount: 1,
             textColor: "#ffffff",
             scaleX: 1,
@@ -89,19 +90,26 @@
             drawSpiralText();
         }
         
-        // Function to download the SVG
-        function downloadSVG() {
+        // Function to download as high quality PNG
+        function downloadHighQualityPNG() {
             // Get the SVG element
             const svgElement = document.getElementById('svg-container');
             
             // Create a clone of the SVG to modify for download
             const svgClone = svgElement.cloneNode(true);
             
-            // Set explicit dimensions
-            svgClone.setAttribute('width', window.innerWidth);
-            svgClone.setAttribute('height', window.innerHeight);
+            // Determine dimensions with higher resolution
+            const pixelRatio = 12; // Use 6x for ultra high quality
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            const scaledWidth = width * pixelRatio;
+            const scaledHeight = height * pixelRatio;
             
-            // Add font definitions to ensure text renders correctly when downloaded
+            // Set explicit dimensions
+            svgClone.setAttribute('width', width);
+            svgClone.setAttribute('height', height);
+            
+            // Add font definitions to ensure text renders correctly
             const styleElement = document.createElementNS("http://www.w3.org/2000/svg", "style");
             styleElement.textContent = `
                 @font-face {
@@ -111,7 +119,7 @@
                 text {
                     font-family: 'Season VF', serif;
                     font-weight: 420 900;
-                    font-variation-settings: 'wght' 300, 'SERF' 100;
+                    font-variation-settings: 'wght' ${config.fontWeight}, 'SERF' ${config.fontSerf};
                     font-feature-settings: 'ss01' 1, 'ss02' 1, 'ss03' 1, 'ss04' 1, 'ss05' 1, 'zero' 1;
                 }
             `;
@@ -119,28 +127,71 @@
             
             // Convert SVG to a data URL
             const svgData = new XMLSerializer().serializeToString(svgClone);
-            const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
-            const svgUrl = URL.createObjectURL(svgBlob);
+            const svgUrl = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
             
-            // Create a download link
-            const downloadLink = document.createElement('a');
-            downloadLink.href = svgUrl;
-            downloadLink.download = 'spiral-text.svg';
+            // Create an Image object to load the SVG
+            const img = new Image();
+            img.onload = function() {
+                // Create a canvas element with higher resolution
+                const canvas = document.createElement('canvas');
+                canvas.width = scaledWidth;
+                canvas.height = scaledHeight;
+                
+                // Get the canvas context and configure for high quality
+                const ctx = canvas.getContext('2d', { alpha: true });
+                
+                // Configure for high quality rendering
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
+                
+                // Clear background for transparency
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Scale up the drawing for higher resolution
+                ctx.scale(pixelRatio, pixelRatio);
+                
+                // Draw the image
+                ctx.drawImage(img, 0, 0);
+                
+                // Convert canvas to PNG with high quality settings
+                canvas.toBlob(function(blob) {
+                    if (!blob) {
+                        console.error('Failed to create PNG blob');
+                        alert('Error: Failed to create PNG. The image might be too large. Please try reducing the quality multiplier or window size.');
+                        return;
+                    }
+                    
+                    try {
+                        const url = URL.createObjectURL(blob);
+                        const downloadLink = document.createElement('a');
+                        downloadLink.href = url;
+                        downloadLink.download = 'spiral-text-high-quality.png';
+                        document.body.appendChild(downloadLink);
+                        downloadLink.click();
+                        document.body.removeChild(downloadLink);
+                        URL.revokeObjectURL(url);
+                    } catch (error) {
+                        console.error('Error creating download:', error);
+                        alert('Error: Failed to create download. The image might be too large. Please try reducing the quality multiplier or window size.');
+                    }
+                }, 'image/png', 1.0); // 1.0 is maximum quality
+            };
             
-            // Trigger download
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
+            // Handle potential errors
+            img.onerror = function(error) {
+                console.error('Error loading SVG for PNG export:', error);
+                alert('Error creating PNG. Please try again with a smaller window size or quality setting.');
+            };
             
-            // Clean up
-            URL.revokeObjectURL(svgUrl);
+            // Load the SVG data URL into the image
+            img.src = svgUrl;
         }
         
         // Initialize dat.gui
         const gui = new dat.GUI();
         gui.add(config, 'text').onChange(drawSpiralText);
-        gui.add(config, 'fontSize', 10, 60, 1).onChange(drawSpiralText);
-        gui.add(config, 'spiralTightness', -10, 10, 0.01).onChange(drawSpiralText);
+        gui.add(config, 'fontSize', 1, 60, 0.5).onChange(drawSpiralText);
+        gui.add(config, 'spiralTightness', -1, 1, 0.01).onChange(drawSpiralText);
         gui.add(config, 'rotation', 0, 360, 5).onChange(drawSpiralText);
         gui.add(config, 'initialRadius', 30, 500, 1).onChange(drawSpiralText);
         gui.add(config, 'charSpacing', 5, 500, 1).onChange(drawSpiralText);
@@ -150,14 +201,14 @@
         
         // X sine modulation controls
         const xSineFolder = gui.addFolder('X Sine Modulation');
-        xSineFolder.add(config, 'scaleXsinAmp', -1, 1, 0.1).onChange(drawSpiralText).name('Amplitude');
-        xSineFolder.add(config, 'scaleXsinFreq', 0, 1, 0.01).onChange(drawSpiralText).name('Frequency');
+        xSineFolder.add(config, 'scaleXsinAmp', -2, 2, 0.1).onChange(drawSpiralText).name('Amplitude');
+        xSineFolder.add(config, 'scaleXsinFreq', 0, 4, 0.01).onChange(drawSpiralText).name('Frequency');
         xSineFolder.add(config, 'scaleXsinPhase', 0, Math.PI * 2, 0.1).onChange(drawSpiralText).name('Phase');
         
         // Y sine modulation controls
         const ySineFolder = gui.addFolder('Y Sine Modulation');
-        ySineFolder.add(config, 'scaleYsinAmp', -1, 1, 0.1).onChange(drawSpiralText).name('Amplitude');
-        ySineFolder.add(config, 'scaleYsinFreq', 0, 1, 0.01).onChange(drawSpiralText).name('Frequency');
+        ySineFolder.add(config, 'scaleYsinAmp', -2, 2, 0.1).onChange(drawSpiralText).name('Amplitude');
+        ySineFolder.add(config, 'scaleYsinFreq', 0, 4, 0.01).onChange(drawSpiralText).name('Frequency');
         ySineFolder.add(config, 'scaleYsinPhase', 0, Math.PI * 2, 0.1).onChange(drawSpiralText).name('Phase');
         
         // Font variation settings
@@ -167,7 +218,10 @@
         
         gui.addColor(config, 'textColor').onChange(drawSpiralText);
         gui.add({ rotateStep: rotateStep }, 'rotateStep').name('Rotate Step');
-        gui.add({ downloadSVG: downloadSVG }, 'downloadSVG').name('Download SVG');
+
+        // Add download buttons in a folder
+        const downloadFolder = gui.addFolder('Download');
+        downloadFolder.add({ downloadHighQualityPNG: downloadHighQualityPNG }, 'downloadHighQualityPNG').name('Download High Quality PNG');
         
         // Resize handler
         function resizeSVG() {
