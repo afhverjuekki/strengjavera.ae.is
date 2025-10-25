@@ -93,8 +93,8 @@
         }
         h4 {
             font-size: 1.5rem;
-            margin-top: 3vh;
-            margin-bottom: 1vh;
+            margin-top: 4vh;
+            margin-bottom: 2vh;
             text-transform: uppercase;
             letter-spacing: 0.1em;
         }
@@ -115,7 +115,6 @@
             font-size: 1rem;
         }
         .credits {
-            text-align: left;
             line-height: 1.8;
             margin-top: 2vh;
         }
@@ -123,17 +122,25 @@
             font-size: 0.95rem;
             margin-bottom: 0.3vh;
         }
+        .credits-list {
+            text-align: center;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.4em;
+        }
         .links {
-            margin-top: 2vh;
-            margin-bottom: 2vh;
+            margin-top: 4vh;
+            margin-bottom: 4vh;
         }
         .links a {
             display: inline-block;
             margin: 0.5vh 1vw;
-            padding: 0.5vh 1vw;
+            padding: 2vh 3vw;
             border: 1px solid #fff;
             text-decoration: none;
             transition: background-color 0.3s;
+            font-size: clamp(0.75rem, 1.2vw, 1.25rem);
         }
         .links a:hover {
             background-color: rgba(255,255,255,0.1);
@@ -143,6 +150,35 @@
         }
         .section {
             margin-bottom: 4vh;
+        }
+        .artist-image {
+            margin: 3vh 0;
+        }
+        .photo-row-single {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        .photo-row-single img {
+            width: 100%;
+            max-width: 700px;
+            height: auto;
+            border-radius: 2px;
+        }
+        .photo-row-double {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 0;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .photo-row-double img {
+            width: calc(50% - 7.5px);
+            max-width: 342.5px;
+            height: auto;
+            border-radius: 2px;
         }
         .iframe-container {
             position: fixed;
@@ -163,8 +199,6 @@
             top: 30px;
             right: 20px;
             z-index: 1001;
-            /* width: 280px; */
-            /* border: 1px solid rgba(255,255,255,1); */
         }
         .lang-switcher button {
             background-color: rgba(0,0,0,0);
@@ -180,10 +214,10 @@
         }
         .lang-switcher button:hover {
             background-color: rgba(0,0,0,0);
-          }
-          .lang-switcher button.active {
+        }
+        .lang-switcher button.active {
             background-color: rgba(0,0,0,0);
-            /* font-variation-settings: 'wght' 600, 'SERF' 100; */
+            font-variation-settings: 'wght' 600, 'SERF' 100;
         }
         .lang-content {
             display: none;
@@ -200,8 +234,18 @@
         .album-cover img {
             width: 100%;
             height: auto;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(50, 50, 50, 0.7);
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            border-radius: 4px;
+        }
+
+        .track-listing {
+            padding: 0;
+            margin: 0;
+        }
+        .track-listing li {
+            margin-bottom: 0.1vh;
+            font-size: clamp(0.9rem, 1.2vw, 1.1rem);
         }
         
         @media (max-width: 768px) {
@@ -250,11 +294,8 @@
                 <div class="header">
                     <h1>Strengjavera</h1>
                     <h2>Music from the installation featuring a digital self-organising system coupled to an electromagnetically augmented grand piano.</h2>
-                    <h3>Composed and arranged by Jack Armitage</h3>
-                    <!-- <h2>The debut album by <a href="https://jackarmitage.com">Jack Armitage</a></h2> -->
-                    <!-- <h3>Released on digital & limited edition vinyl September 5, 2025</h3> -->
-                    <!-- <h3>Mengi Records MENGI20</h3> -->
-                </div>
+                    <h3>Composed and arranged by <a target="_blank" href="https://jackarmitage.com">Jack Armitage</a> and released on <a target="_blank" href="https://mengi.net">Mengi Records</a></h3>
+                  </div>
                 <div class="album-cover">
                     <img src="img/strengjavera.jpg" alt="Strengjavera Album Cover">
                 </div>
@@ -268,12 +309,11 @@
                     <div class="links">
                         <a href="https://jackarmitage.bandcamp.com/album/strengjavera" target="_blank">Listen on Bandcamp</a>
                         <a href="https://www.youtube.com/watch?v=2aaPVqkJ_K8" target="_blank">Watch Installation Video</a>
-                        <a href="https://www.dropbox.com/scl/fo/9py485chphc0qbdtri8sl/AJyXwRbF70qG3_cO82Q_R_o?rlkey=r2kxs7oir09xwmyllp5lrb2eo&st=ltcmjkmw&dl=0" target="_blank">Press Kit</a>
                     </div>
 
                     <div class="section">
                         <h4>Track Listing</h4>
-                        <ol>
+                        <ol class="track-listing">
                             <li>Ætlunin var að skrifa um mig og þig, semsagt um okkur. Ég ætlaði að færa mig nær þér og þig nær mér, okkur nær okkur.</li>
                             <li>Ég hélt að leiðin til að færa mig nær þér, væri að hugsa um muninn á okkur og hinum, en það reyndist ekki vera rétt.</li>
                             <li>Það var óumflýjanlegt að komast að öðru. Get sagt þér barnalega sögu svo þú skiljir mig betur, í næsta húsi við mig þegar</li>
@@ -285,35 +325,45 @@
                             <li>að því að skilin milli mín og hinna, okkar og þeirra, eru tilbúningur. Það eru engin þau eða hin bara við, ég og þú og við.</li>
                             <li>Einu eftirlifendurnir í rauninni.</li>
                         </ol>
-                        <p style="font-size: 0.9rem; font-style: italic;">Track titles by <a href="https://www.instagram.com/mariaebragadottir/" target="_blank">María Elísabet Bragadóttir</a></p>
                     </div>
 
                     <div class="section">
                         <h4>About the Artist</h4>
-                        <p>Jack Armitage crafts musical experiences that tease apart traditional boundaries to open up new spaces. Born in Manchester and based in Iceland, he is the founder of studio-lab <a href="http://instagram.com/afhverju.ekki.is" target="_blank">Afhverju Ekki</a> ("The Absolutely Everything Studio").</p>
-                        
-                        <p>As recording artist <a href="https://www.instagram.com/lildata.music/" target="_blank">Lil Data</a>, Armitage has released on the influential <a href="http://instagram.com/pcmus" target="_blank">PC Music</a> label, a collective credited with creating the hyperpop genre. His production credits include work with pop innovator Charli XCX and Icelandic icon Jónsi (of Sigur Rós).</p>
+                        <div class="artist-image">
+                          <div class="photo-row-single">
+                            <img src="img/strengjavera_press_photo_1_vikram_pradhan.jpg" alt="Strengjavera press photo 1">
+                          </div>
+                          <div class="photo-row-double">
+                            <img src="img/strengjavera_press_photo_2_vikram_pradhan.jpg" alt="Strengjavera press photo 2">
+                            <img src="img/strengjavera_press_photo_3_vikram_pradhan.jpg" alt="Strengjavera press photo 3">
+                          </div>
+                        </div>
+                        <div class="artist-info">
+                          <p>Jack Armitage crafts musical experiences that tease apart traditional boundaries to open up new spaces. Born in Manchester and based in Iceland, he is the founder of studio-lab <a href="http://instagram.com/afhverju.ekki.is" target="_blank">Afhverju Ekki</a> ("The Absolutely Everything Studio").</p>
+                          
+                          <p>As recording artist <a href="https://www.instagram.com/lildata.music/" target="_blank">Lil Data</a>, Armitage has released on the influential <a href="http://instagram.com/pcmus" target="_blank">PC Music</a> label, a collective credited with creating the hyperpop genre. His production credits include work with pop innovator Charli XCX and Icelandic icon Jónsi (of Sigur Rós).</p>
+                        </div>
                     </div>
 
                     <div class="section credits">
                         <h4>Credits</h4>
-                        <p>Software, music, creative direction – <a href="https://www.instagram.com/jdkarmitage/" target="_blank">Jack Armitage</a></p>
-                        <p>Audio Recordist – <a href="https://www.instagram.com/essteb/" target="_blank">Celeste Betancur</a></p>
-                        <p>Mixing & Mastering – <a href="https://www.instagram.com/joshua.sdxsn/" target="_blank">Josh Wilkinson</a></p>
-                        <p>Artwork – <a href="https://www.instagram.com/arnabeth" target="_blank">Arna Beth</a></p>
-                        <p>Text for Track Titles – <a href="https://www.instagram.com/mariaebragadottir/" target="_blank">María Elísabet Bragadóttir</a></p>
-                        <p>Magnetic Resonator Piano – <a href="https://andrewmcpherson.org/" target="_blank">Andrew McPherson</a></p>
-                        <p>Vinyl – <a href="http://fishfactory.is/" target="_blank">Fish Factory Creative Centre of Stöðvarfjörður</a></p>
-                        <p><a href="http://tolvera.is" target="_blank">Tölvera</a> software originally developed at the <a href="https://www.instagram.com/intelligentinstruments/" target="_blank">Intelligent Instruments Lab</a></p>
-                        <p>Supported by <a href="https://www.icelandmusic.is/en/music-fund" target="_blank">Iceland Music Fund</a></p>
-                        <p>Portrait photography - <a href="https://www.instagram.com/vikrampradhan_" target="_blank">Vikram Pradhan</a></p>
+                        <div class="credits-list">
+                          <span>Software, music, creative direction: <a href="https://www.instagram.com/jdkarmitage/" target="_blank">Jack Armitage</a></span> •
+                          <span>Audio Recordist: <a href="https://www.instagram.com/essteb/" target="_blank">Celeste Betancur</a></span> •
+                          <span>Mixing & Mastering: <a href="https://www.instagram.com/joshua.sdxsn/" target="_blank">Josh Wilkinson</a></span> •
+                          <span>Artwork: <a href="https://www.instagram.com/arnabeth" target="_blank">Arna Beth</a></span> •
+                          <span>Text for Track Titles: <a href="https://www.instagram.com/mariaebragadottir/" target="_blank">María Elísabet Bragadóttir</a></span> •
+                          <span>Magnetic Resonator Piano: <a href="https://andrewmcpherson.org/" target="_blank">Andrew McPherson</a></span> •
+                          <span>Vinyl: <a href="http://fishfactory.is/" target="_blank">Fish Factory Creative Centre of Stöðvarfjörður</a></span> •
+                          <span><a href="http://tolvera.is" target="_blank">Tölvera</a> software originally developed at the <a href="https://www.instagram.com/intelligentinstruments/" target="_blank">Intelligent Instruments Lab</a></span> •
+                          <span>Supported by <a href="https://www.icelandmusic.is/en/music-fund" target="_blank">Iceland Music Fund</a></span> •
+                          <span>Portrait photography - <a href="https://www.instagram.com/vikrampradhan_" target="_blank">Vikram Pradhan</a></span>
+                        </div>
                     </div>
 
                     <div class="section">
                         <h4>Contact</h4>
-                        <p>For interview requests, review copies, and additional information:</p>
-                        <p><a href="mailto:ja@xn--6ca.is">ja@æ.is</a> | +354 779 8943</p>
-                        <p><a href="http://jackarmitage.com" target="_blank">jackarmitage.com</a> | <a href="http://instagram.com/jdkarmitage" target="_blank">@jdkarmitage</a></p>
+                        <p style="text-align: center;"><a href="mailto:ja@xn--6ca.is">ja@æ.is</a> | <a href="http://jackarmitage.com" target="_blank">jackarmitage.com</a> | <a href="http://instagram.com/jdkarmitage" target="_blank">@jdkarmitage</a></p>
                     </div>
                 </div>
             </div>
@@ -323,10 +373,7 @@
                 <div class="header">
                     <h1>Strengjavera</h1>
                     <h2>Hljómplatan er afurð innsetningar þar sem stafrænt ferli líkir eftir því lífræna og myndar píanótónlist í gegnum rafsegla tengda við flygil.</h2>
-                    <h3>Samið og útsett af Jack Armitage</h3>
-                    <!-- <h2>Frumraun eftir <a href="https://jackarmitage.bandcamp.com">Jack Armitage</a></h2> -->
-                    <!-- <h3>Kom út á stafrænu formi og takmörkuðu vínýli 5. september, 2025</h3> -->
-                    <!-- <h3>Mengi Records MENGI20</h3> -->
+                    <h3>Samið og útsett af <a target="_blank" href="https://jackarmitage.com">Jack Armitage</a> og gefin út á <a target="_blank" href="https://mengi.net">Mengi Records</a></h3>
                 </div>
                 <div class="album-cover">
                     <img src="img/strengjavera.jpg" alt="Strengjavera Album Cover">
@@ -341,12 +388,11 @@
                     <div class="links">
                         <a href="https://jackarmitage.bandcamp.com/album/strengjavera" target="_blank">Hlusta á Bandcamp</a>
                         <a href="https://www.youtube.com/watch?v=2aaPVqkJ_K8" target="_blank">Horfa á Myndband</a>
-                        <a href="https://www.dropbox.com/scl/fo/9py485chphc0qbdtri8sl/AJyXwRbF70qG3_cO82Q_R_o?rlkey=r2kxs7oir09xwmyllp5lrb2eo&st=ltcmjkmw&dl=0" target="_blank">Pressumöppa</a>
                     </div>
 
                     <div class="section">
                         <h4>Lagalisti</h4>
-                        <ol>
+                        <ol class="track-listing">
                             <li>Ætlunin var að skrifa um mig og þig, semsagt um okkur. Ég ætlaði að færa mig nær þér og þig nær mér, okkur nær okkur.</li>
                             <li>Ég hélt að leiðin til að færa mig nær þér, væri að hugsa um muninn á okkur og hinum, en það reyndist ekki vera rétt.</li>
                             <li>Það var óumflýjanlegt að komast að öðru. Get sagt þér barnalega sögu svo þú skiljir mig betur, í næsta húsi við mig þegar</li>
@@ -358,35 +404,43 @@
                             <li>að því að skilin milli mín og hinna, okkar og þeirra, eru tilbúningur. Það eru engin þau eða hin bara við, ég og þú og við.</li>
                             <li>Einu eftirlifendurnir í rauninni.</li>
                         </ol>
-                        <p style="font-size: 0.9rem; font-style: italic;">Texti eftir <a href="https://www.instagram.com/mariaebragadottir/" target="_blank">Maríu Elísabet Bragadóttur</a></p>
                     </div>
 
                     <div class="section">
                         <h4>Ævisaga Jack Armitage</h4>
-                        <p>Jack Armitage er tónlistarmaður og hönnuður með yfirgripsmikla þekkingu á tækni og tækninýjungum. Hann er stofnandi <a href="http://instagram.com/afhverju.ekki.is" target="_blank">Afhverju Ekki</a> – The Absolutely Everything Studio og starfaði sem nýdoktor við <a href="http://iil.is" target="_blank">Intelligent Instruments Lab</a> við Háskóla Íslands.</p>
-                        
+                        <div class="artist-image">
+                          <div class="photo-row-single">
+                            <img src="img/strengjavera_press_photo_1_vikram_pradhan.jpg" alt="Strengjavera press photo 1">
+                          </div>
+                          <div class="photo-row-double">
+                            <img src="img/strengjavera_press_photo_2_vikram_pradhan.jpg" alt="Strengjavera press photo 2">
+                            <img src="img/strengjavera_press_photo_3_vikram_pradhan.jpg" alt="Strengjavera press photo 3">
+                          </div>
+                        </div>
+                        <p>Jack Armitage er tónlistarmaður og hönnuður með yfirgripsmikla þekkingu á tækni og tækninýjungum. Hann er stofnandi <a href="http://instagram.com/afhverju.ekki.is" target="_blank">Afhverju Ekki</a> (The Absolutely Everything Studio), og starfaði sem nýdoktor við <a href="http://iil.is" target="_blank">Intelligent Instruments Lab</a> við Háskóla Íslands. </p>
+                          
                         <p>Verkefnið hans <a href="https://www.instagram.com/lildata.music/" target="_blank">Lil Data</a> kom út hjá <a href="http://instagram.com/pcmus" target="_blank">PC Music</a>, og hann hefur unnið í framleiðslu fyrir stór nöfn eins og Charli XCX og Jónsa úr Sigur Rós.</p>
                     </div>
 
                     <div class="section credits">
                         <h4>Einingar</h4>
-                        <p>Samið og útsett af <a href="https://www.instagram.com/jdkarmitage/" target="_blank">Jack Armitage</a></p>
-                        <p>Hljóðritað með <a href="https://www.instagram.com/essteb/" target="_blank">Celeste Betancur</a></p>
-                        <p>Hljóðblöndun og hljóðjöfnun: <a href="https://www.instagram.com/joshua.sdxsn/" target="_blank">Josh Wilkinson</a></p>
-                        <p>Mynd: <a href="https://www.instagram.com/arnabeth" target="_blank">Arna Beth</a></p>
-                        <p>Texti: <a href="https://www.instagram.com/mariaebragadottir/" target="_blank">María Elísabet Bragadóttir</a></p>
-                        <p>Magnetic Resonator Piano: <a href="https://andrewmcpherson.org/" target="_blank">Andrew McPherson</a></p>
-                        <p>Vínyll: <a href="http://fishfactory.is/" target="_blank">Fish Factory Creative Centre of Stöðvarfjörður</a></p>
-                        <p><a href="http://tolvera.is" target="_blank">Tölvera</a> búið til í <a href="https://www.instagram.com/intelligentinstruments/" target="_blank">Intelligent Instruments Lab</a></p>
-                        <p>Stutt af Tónlistarmiðstöð</p>
-                        <p>Ljósmyndun: <a href="https://www.instagram.com/vikrampradhan_" target="_blank">Vikram Pradhan</a></p>
+                        <div class="credits-list">
+                          <span>Samið og útsett af <a href="https://www.instagram.com/jdkarmitage/" target="_blank">Jack Armitage</a></span> • 
+                          <span>Hljóðritað með <a href="https://www.instagram.com/essteb/" target="_blank">Celeste Betancur</a></span> • 
+                          <span>Hljóðblöndun og hljóðjöfnun: <a href="https://www.instagram.com/joshua.sdxsn/" target="_blank">Josh Wilkinson</a></span> • 
+                          <span>Mynd: <a href="https://www.instagram.com/arnabeth" target="_blank">Arna Beth</a></span> • 
+                          <span>Texti: <a href="https://www.instagram.com/mariaebragadottir/" target="_blank">María Elísabet Bragadóttir</a></span> • 
+                          <span>Magnetic Resonator Piano: <a href="https://andrewmcpherson.org/" target="_blank">Andrew McPherson</a></span> • 
+                          <span>Vínyll: <a href="http://fishfactory.is/" target="_blank">Fish Factory Creative Centre of Stöðvarfjörður</a></span> • 
+                          <span><a href="http://tolvera.is" target="_blank">Tölvera</a> búið til í <a href="https://www.instagram.com/intelligentinstruments/" target="_blank">Intelligent Instruments Lab</a></span> • 
+                          <span>Stutt af Tónlistarmiðstöð</span> • 
+                          <span>Ljósmyndun: <a href="https://www.instagram.com/vikrampradhan_" target="_blank">Vikram Pradhan</a></span>
+                        </div>
                     </div>
 
                     <div class="section">
                         <h4>Samband</h4>
-                        <p>Fyrir beiðnir um viðtal, umsagnareintök og frekari upplýsingar:</p>
-                        <p><a href="mailto:ja@xn--6ca.is">ja@æ.is</a> | +354 779 8943</p>
-                        <p><a href="http://jackarmitage.com" target="_blank">jackarmitage.com</a> | <a href="http://instagram.com/jdkarmitage" target="_blank">@jdkarmitage</a></p>
+                        <p style="text-align: center;"><a href="mailto:ja@xn--6ca.is">ja@æ.is</a> | <a href="http://jackarmitage.com" target="_blank">jackarmitage.com</a> | <a href="http://instagram.com/jdkarmitage" target="_blank">@jdkarmitage</a></p>
                     </div>
                 </div>
             </div>
