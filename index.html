@@ -35,6 +35,7 @@
             flex: 1;
             padding: 4vw;
             width: 100%;
+            min-height: 100vh;
         }
         .inner-container {
             position: absolute;
@@ -45,13 +46,14 @@
             border: 0.5px solid #fff;
         }
         .background {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
             background-image: url("img/strengjavera_wide.jpg");
             background-size: cover;
+            background-position: center;
             background-repeat: no-repeat;
             filter: blur(30px);
             z-index: -1;
@@ -59,7 +61,7 @@
         .content-wrapper {
             position: relative;
             z-index: 1;
-            height: 100%;
+            min-height: 100%;
             padding: 20px;
         }
         .header {
@@ -68,24 +70,79 @@
             padding: 20px;
         }
         .content {
-            width: 50%;
+            width: 70%;
+            max-width: 900px;
             margin: 0 auto;
         }
         h1 {
-            font-size: 12vw;
+            font-size: clamp(2.2rem, 8vw, 10rem);
             margin-top: 4vh;
             margin-bottom: 2vh;
+            letter-spacing: clamp(0.1em, 0.15em + 1vw, 0.5em);
+            text-transform: uppercase;
         }
         h2 {
-            font-size: 3vw;
-            margin-top: 2vh;
+            font-size: clamp(0.85rem, 1.35vw, 4rem);
+            font-style: italic;
+            margin-top: 4vh;
+            margin-bottom: 4vh;
         }
         h3 {
-            font-size: 1.75vw;
+            font-size: clamp(0.75rem, 1.2vw, 4rem);
             margin-top: 1vh;
+        }
+        h4 {
+            font-size: 1.5rem;
+            margin-top: 3vh;
+            margin-bottom: 1vh;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 1.5vh;
+            text-align: left;
+        }
+        ol {
+            text-align: left;
+            line-height: 1.8;
+            margin-bottom: 2vh;
+            padding-left: 2em;
+        }
+        ol li {
+            margin-bottom: 0.5vh;
+            font-size: 1rem;
+        }
+        .credits {
+            text-align: left;
+            line-height: 1.8;
+            margin-top: 2vh;
+        }
+        .credits p {
+            font-size: 0.95rem;
+            margin-bottom: 0.3vh;
+        }
+        .links {
+            margin-top: 2vh;
+            margin-bottom: 2vh;
+        }
+        .links a {
+            display: inline-block;
+            margin: 0.5vh 1vw;
+            padding: 0.5vh 1vw;
+            border: 1px solid #fff;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .links a:hover {
+            background-color: rgba(255,255,255,0.1);
         }
         a {
             color: #fff;
+        }
+        .section {
+            margin-bottom: 4vh;
         }
         .iframe-container {
             position: fixed;
@@ -101,32 +158,275 @@
             max-width: 500px;
             width: 100%;
         }
+        .lang-switcher {
+            position: fixed;
+            top: 30px;
+            right: 20px;
+            z-index: 1001;
+            /* width: 280px; */
+            /* border: 1px solid rgba(255,255,255,1); */
+        }
+        .lang-switcher button {
+            background-color: rgba(0,0,0,0);
+            border: 0px;
+            color: #fff;
+            padding: 10px 20px;
+            font-family: 'Season VF', serif;
+            font-variation-settings: 'wght' 300, 'SERF' 100;
+            font-feature-settings: 'ss01' 1, 'ss02' 1, 'ss03' 1, 'ss04' 1, 'ss05' 1, 'zero' 1;
+            font-size: 1rem;
+            letter-spacing: 0.1em;
+            width: 60px;
+        }
+        .lang-switcher button:hover {
+            background-color: rgba(0,0,0,0);
+          }
+          .lang-switcher button.active {
+            background-color: rgba(0,0,0,0);
+            /* font-variation-settings: 'wght' 600, 'SERF' 100; */
+        }
+        .lang-content {
+            display: none;
+        }
+        .lang-content.active {
+            display: block;
+        }
+        .album-cover {
+            display: flex;
+            justify-content: center;
+            margin: 5vh auto;
+            max-width: 800px;
+        }
+        .album-cover img {
+            width: 100%;
+            height: auto;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+        
+        @media (max-width: 768px) {
+            h4 {
+                font-size: 1.2rem;
+            }
+            p, ol li {
+                font-size: 0.95rem;
+            }
+            .content {
+                width: 90%;
+            }
+            .container {
+                padding: 2vw;
+            }
+            .inner-container {
+                top: 1vw;
+                left: 1vw;
+                right: 1vw;
+                bottom: 1vw;
+            }
+            .lang-switcher {
+                top: 10px;
+                right: 10px;
+            }
+            .lang-switcher button {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="lang-switcher">
+        <button onclick="switchLang('en')" id="btn-en" class="active">EN</button>
+        <span>/</span>
+        <button onclick="switchLang('is')" id="btn-is">IS</button>
+    </div>
     <div class="container">
         <div class="inner-container">
             <div class="background"></div>
         </div>
         <div class="content-wrapper">
-            <div class="header">
-                <h1>Strengjavera</h1>
-                <h2>The debut album by <a href="https://jackarmitage.bandcamp.com">Jack Armitage</a></h2>
-                <h3>Released on digital & limited edition vinyl 2/5/25</h3>
+            <!-- English Content -->
+            <div id="content-en" class="lang-content active">
+                <div class="header">
+                    <h1>Strengjavera</h1>
+                    <h2>Music from the installation featuring a digital self-organising system coupled to an electromagnetically augmented grand piano.</h2>
+                    <h3>Composed and arranged by Jack Armitage</h3>
+                    <!-- <h2>The debut album by <a href="https://jackarmitage.com">Jack Armitage</a></h2> -->
+                    <!-- <h3>Released on digital & limited edition vinyl September 5, 2025</h3> -->
+                    <!-- <h3>Mengi Records MENGI20</h3> -->
+                </div>
+                <div class="album-cover">
+                    <img src="img/strengjavera.jpg" alt="Strengjavera Album Cover">
+                </div>
+                <div class="content">
+                    <div class="section">
+                        <p><em>Strengjavera</em> ("string being") deconstructs and reinterprets the grand piano as a living entity imbued with biologically-inspired intelligences. No human performer is present, no keys are touched, and no harmonic language is enforced. In their absence, a beguiling sonic sculpture unfurls, beckoning the listener in, to intimately witness a meditative commingling of biological simulation and physical reality.</p>
+                        
+                        <p>Originally an installation exhibited at Norræna Húsið, now recorded and arranged over ten tracks, the album carries listeners through evolving states of digital-acoustic interaction. Bird flocking and slime mold algorithms stimulate grand piano strings via electromagnetic fields, and in reciprocity, these algorithms are then subtly perturbed by the piano's physical resonances. The result is a languid waltz through emergence space, and a novel divergence in contemporary pianism.</p>
+                    </div>
+
+                    <div class="links">
+                        <a href="https://jackarmitage.bandcamp.com/album/strengjavera" target="_blank">Listen on Bandcamp</a>
+                        <a href="https://www.youtube.com/watch?v=2aaPVqkJ_K8" target="_blank">Watch Installation Video</a>
+                        <a href="https://www.dropbox.com/scl/fo/9py485chphc0qbdtri8sl/AJyXwRbF70qG3_cO82Q_R_o?rlkey=r2kxs7oir09xwmyllp5lrb2eo&st=ltcmjkmw&dl=0" target="_blank">Press Kit</a>
+                    </div>
+
+                    <div class="section">
+                        <h4>Track Listing</h4>
+                        <ol>
+                            <li>Ætlunin var að skrifa um mig og þig, semsagt um okkur. Ég ætlaði að færa mig nær þér og þig nær mér, okkur nær okkur.</li>
+                            <li>Ég hélt að leiðin til að færa mig nær þér, væri að hugsa um muninn á okkur og hinum, en það reyndist ekki vera rétt.</li>
+                            <li>Það var óumflýjanlegt að komast að öðru. Get sagt þér barnalega sögu svo þú skiljir mig betur, í næsta húsi við mig þegar</li>
+                            <li>ég var lítil, bjó stelpa sem var algjör geimvera, óþægileg. Ég vildi ekkert með hana hafa og mig langaði ekki að við ættum</li>
+                            <li>eitthvað sameiginlegt því hún var svona viðundur. Fjölskyldan hennar flutti til útlanda og ég sá hana aldrei framar, ég var</li>
+                            <li>fegin þá en málið er að hún skildi eitthvað eftir innra með mér. Það var nýtt líffæri sem stækkaði í fjarlægðinni, eins og</li>
+                            <li>dökkur ávöxtur, eitthvað þrútið sem gaf frá sér ilm og fyrirheit, loforð um líf en hótun um rotnun ef það gleymdist, ég</li>
+                            <li>get ekki lýst því öðruvísi. Það kemur fyrir þegar ég tala um hana að ég segi ósjálfrátt við en ekki hún. Þannig komst ég</li>
+                            <li>að því að skilin milli mín og hinna, okkar og þeirra, eru tilbúningur. Það eru engin þau eða hin bara við, ég og þú og við.</li>
+                            <li>Einu eftirlifendurnir í rauninni.</li>
+                        </ol>
+                        <p style="font-size: 0.9rem; font-style: italic;">Track titles by <a href="https://www.instagram.com/mariaebragadottir/" target="_blank">María Elísabet Bragadóttir</a></p>
+                    </div>
+
+                    <div class="section">
+                        <h4>About the Artist</h4>
+                        <p>Jack Armitage crafts musical experiences that tease apart traditional boundaries to open up new spaces. Born in Manchester and based in Iceland, he is the founder of studio-lab <a href="http://instagram.com/afhverju.ekki.is" target="_blank">Afhverju Ekki</a> ("The Absolutely Everything Studio").</p>
+                        
+                        <p>As recording artist <a href="https://www.instagram.com/lildata.music/" target="_blank">Lil Data</a>, Armitage has released on the influential <a href="http://instagram.com/pcmus" target="_blank">PC Music</a> label, a collective credited with creating the hyperpop genre. His production credits include work with pop innovator Charli XCX and Icelandic icon Jónsi (of Sigur Rós).</p>
+                    </div>
+
+                    <div class="section credits">
+                        <h4>Credits</h4>
+                        <p>Software, music, creative direction – <a href="https://www.instagram.com/jdkarmitage/" target="_blank">Jack Armitage</a></p>
+                        <p>Audio Recordist – <a href="https://www.instagram.com/essteb/" target="_blank">Celeste Betancur</a></p>
+                        <p>Mixing & Mastering – <a href="https://www.instagram.com/joshua.sdxsn/" target="_blank">Josh Wilkinson</a></p>
+                        <p>Artwork – <a href="https://www.instagram.com/arnabeth" target="_blank">Arna Beth</a></p>
+                        <p>Text for Track Titles – <a href="https://www.instagram.com/mariaebragadottir/" target="_blank">María Elísabet Bragadóttir</a></p>
+                        <p>Magnetic Resonator Piano – <a href="https://andrewmcpherson.org/" target="_blank">Andrew McPherson</a></p>
+                        <p>Vinyl – <a href="http://fishfactory.is/" target="_blank">Fish Factory Creative Centre of Stöðvarfjörður</a></p>
+                        <p><a href="http://tolvera.is" target="_blank">Tölvera</a> software originally developed at the <a href="https://www.instagram.com/intelligentinstruments/" target="_blank">Intelligent Instruments Lab</a></p>
+                        <p>Supported by <a href="https://www.icelandmusic.is/en/music-fund" target="_blank">Iceland Music Fund</a></p>
+                        <p>Portrait photography - <a href="https://www.instagram.com/vikrampradhan_" target="_blank">Vikram Pradhan</a></p>
+                    </div>
+
+                    <div class="section">
+                        <h4>Contact</h4>
+                        <p>For interview requests, review copies, and additional information:</p>
+                        <p><a href="mailto:ja@xn--6ca.is">ja@æ.is</a> | +354 779 8943</p>
+                        <p><a href="http://jackarmitage.com" target="_blank">jackarmitage.com</a> | <a href="http://instagram.com/jdkarmitage" target="_blank">@jdkarmitage</a></p>
+                    </div>
+                </div>
             </div>
-            <div class="content">
-                <!-- <iframe style="border: 0; width: 400px; height: 472px;" src="https://bandcamp.com/EmbeddedPlayer/album=1594459342/size=large/bgcol=ffffff/linkcol=0687f5/artwork=small/transparent=true/tracklist=true/tracks=1329860413,3509530975,1860199187,2100989140,4259810784,759897372,446024254,2881967577,1924067607,3859345897/esig=225f0b9105a3334b273b5cb6e421064d/" seamless><a href="https://jackarmitage.bandcamp.com/album/strengjavera">Strengjavera by Jack Armitage</a></iframe> -->
-                <!-- <iframe style="border: 0; width: 400px; height: 472px;" src="https://bandcamp.com/EmbeddedPlayer/album=621887422/size=large/bgcol=ffffff/linkcol=0687f5/artwork=small/transparent=true/" seamless><a href="https://omricohencomposer.bandcamp.com/album/event-horizon">Event Horizon by Omri Cohen</a></iframe> -->
-                <p>Strengjavera ("string being") is an installation that delves into the concept of self-organising systems through the interaction of artificial life programs with an acoustic grand piano. Viewers are invited to witness the unpredictable yet mesmerising patterns that emerge as the piano's strings are set into motion by electromagnetism, controlled by biomimetic simulations. The piece explores the potential for agential systems to adapt and evolve in real-time, creating a dynamic and ever-changing soundscape that reflects the complexity and beauty of natural systems. By blurring the boundaries between technology and nature, Strengjavera prompts viewers to reflect on the relationship between human agency and autonomous systems, while also celebrating the beautiful natural acoustics of the piano in novel and unheard ways.</p>
-                <p>Strengjavera ("string being") is an installation that delves into the concept of self-organising systems through the interaction of artificial life programs with an acoustic grand piano. Viewers are invited to witness the unpredictable yet mesmerising patterns that emerge as the piano's strings are set into motion by electromagnetism, controlled by biomimetic simulations. The piece explores the potential for agential systems to adapt and evolve in real-time, creating a dynamic and ever-changing soundscape that reflects the complexity and beauty of natural systems. By blurring the boundaries between technology and nature, Strengjavera prompts viewers to reflect on the relationship between human agency and autonomous systems, while also celebrating the beautiful natural acoustics of the piano in novel and unheard ways.</p>
-                <p>Strengjavera ("string being") is an installation that delves into the concept of self-organising systems through the interaction of artificial life programs with an acoustic grand piano. Viewers are invited to witness the unpredictable yet mesmerising patterns that emerge as the piano's strings are set into motion by electromagnetism, controlled by biomimetic simulations. The piece explores the potential for agential systems to adapt and evolve in real-time, creating a dynamic and ever-changing soundscape that reflects the complexity and beauty of natural systems. By blurring the boundaries between technology and nature, Strengjavera prompts viewers to reflect on the relationship between human agency and autonomous systems, while also celebrating the beautiful natural acoustics of the piano in novel and unheard ways.</p>
-                <p>Strengjavera ("string being") is an installation that delves into the concept of self-organising systems through the interaction of artificial life programs with an acoustic grand piano. Viewers are invited to witness the unpredictable yet mesmerising patterns that emerge as the piano's strings are set into motion by electromagnetism, controlled by biomimetic simulations. The piece explores the potential for agential systems to adapt and evolve in real-time, creating a dynamic and ever-changing soundscape that reflects the complexity and beauty of natural systems. By blurring the boundaries between technology and nature, Strengjavera prompts viewers to reflect on the relationship between human agency and autonomous systems, while also celebrating the beautiful natural acoustics of the piano in novel and unheard ways.</p>
-                <p>Strengjavera (“string being”) is an installation that delves into the concept of self-organising systems through the interaction of artificial life programs with an acoustic grand piano. Viewers are invited to witness the unpredictable yet mesmerising patterns that emerge as the piano’s strings are set into motion by electromagnetism, controlled by biomimetic simulations. The piece explores the potential for agential systems to adapt and evolve in real-time, creating a dynamic and ever-changing soundscape that reflects the complexity and beauty of natural systems. By blurring the boundaries between technology and nature, Strengjavera prompts viewers to reflect on the relationship between human agency and autonomous systems, while also celebrating the beautiful natural acoustics of the piano in novel and unheard ways.</p>
+
+            <!-- Icelandic Content -->
+            <div id="content-is" class="lang-content">
+                <div class="header">
+                    <h1>Strengjavera</h1>
+                    <h2>Hljómplatan er afurð innsetningar þar sem stafrænt ferli líkir eftir því lífræna og myndar píanótónlist í gegnum rafsegla tengda við flygil.</h2>
+                    <h3>Samið og útsett af Jack Armitage</h3>
+                    <!-- <h2>Frumraun eftir <a href="https://jackarmitage.bandcamp.com">Jack Armitage</a></h2> -->
+                    <!-- <h3>Kom út á stafrænu formi og takmörkuðu vínýli 5. september, 2025</h3> -->
+                    <!-- <h3>Mengi Records MENGI20</h3> -->
+                </div>
+                <div class="album-cover">
+                    <img src="img/strengjavera.jpg" alt="Strengjavera Album Cover">
+                </div>
+                <div class="content">
+                    <div class="section">
+                        <p>Í verki sínu „Strengjavera" leysir Jack upp og endurskilgreinir flygilinn sem lifandi veru fulla af greind byggðri á náttúrulegum ferlum. Enginn spilar og engin manngerð hljómræna er til staðar heldur er tónninn myndaður með rafseglum, þ.e. einum rafsegli fyrir hverja nótu. Í þessu tómarúmi opnast fyrir heillandi hljóðskúlptúr sem dregur þau sem hlusta inn í viðkvæmt hugarástand þar sem þau verða vitni að samruna líffræðilegrar hermunar og raunheimsins.</p>
+                        
+                        <p>Upphaflega var verkið innsetning í Norræna húsinu en hefur nú verið hljóðritað og útsett sem tíu lög sem hleypa þeim sem hlusta í gegnum samruna þess lífræna og stafræna. Í þeim heimi verður hópamyndun fugla og hegðun slímþörunga að efnivið víðóma píanótónlistar. Niðurstaðan verður hægfara sjálfsprottinn vals sem markar algjöra nýjung í píanótónlist nútímans.</p>
+                    </div>
+
+                    <div class="links">
+                        <a href="https://jackarmitage.bandcamp.com/album/strengjavera" target="_blank">Hlusta á Bandcamp</a>
+                        <a href="https://www.youtube.com/watch?v=2aaPVqkJ_K8" target="_blank">Horfa á Myndband</a>
+                        <a href="https://www.dropbox.com/scl/fo/9py485chphc0qbdtri8sl/AJyXwRbF70qG3_cO82Q_R_o?rlkey=r2kxs7oir09xwmyllp5lrb2eo&st=ltcmjkmw&dl=0" target="_blank">Pressumöppa</a>
+                    </div>
+
+                    <div class="section">
+                        <h4>Lagalisti</h4>
+                        <ol>
+                            <li>Ætlunin var að skrifa um mig og þig, semsagt um okkur. Ég ætlaði að færa mig nær þér og þig nær mér, okkur nær okkur.</li>
+                            <li>Ég hélt að leiðin til að færa mig nær þér, væri að hugsa um muninn á okkur og hinum, en það reyndist ekki vera rétt.</li>
+                            <li>Það var óumflýjanlegt að komast að öðru. Get sagt þér barnalega sögu svo þú skiljir mig betur, í næsta húsi við mig þegar</li>
+                            <li>ég var lítil, bjó stelpa sem var algjör geimvera, óþægileg. Ég vildi ekkert með hana hafa og mig langaði ekki að við ættum</li>
+                            <li>eitthvað sameiginlegt því hún var svona viðundur. Fjölskyldan hennar flutti til útlanda og ég sá hana aldrei framar, ég var</li>
+                            <li>fegin þá en málið er að hún skildi eitthvað eftir innra með mér. Það var nýtt líffæri sem stækkaði í fjarlægðinni, eins og</li>
+                            <li>dökkur ávöxtur, eitthvað þrútið sem gaf frá sér ilm og fyrirheit, loforð um líf en hótun um rotnun ef það gleymdist, ég</li>
+                            <li>get ekki lýst því öðruvísi. Það kemur fyrir þegar ég tala um hana að ég segi ósjálfrátt við en ekki hún. Þannig komst ég</li>
+                            <li>að því að skilin milli mín og hinna, okkar og þeirra, eru tilbúningur. Það eru engin þau eða hin bara við, ég og þú og við.</li>
+                            <li>Einu eftirlifendurnir í rauninni.</li>
+                        </ol>
+                        <p style="font-size: 0.9rem; font-style: italic;">Texti eftir <a href="https://www.instagram.com/mariaebragadottir/" target="_blank">Maríu Elísabet Bragadóttur</a></p>
+                    </div>
+
+                    <div class="section">
+                        <h4>Ævisaga Jack Armitage</h4>
+                        <p>Jack Armitage er tónlistarmaður og hönnuður með yfirgripsmikla þekkingu á tækni og tækninýjungum. Hann er stofnandi <a href="http://instagram.com/afhverju.ekki.is" target="_blank">Afhverju Ekki</a> – The Absolutely Everything Studio og starfaði sem nýdoktor við <a href="http://iil.is" target="_blank">Intelligent Instruments Lab</a> við Háskóla Íslands.</p>
+                        
+                        <p>Verkefnið hans <a href="https://www.instagram.com/lildata.music/" target="_blank">Lil Data</a> kom út hjá <a href="http://instagram.com/pcmus" target="_blank">PC Music</a>, og hann hefur unnið í framleiðslu fyrir stór nöfn eins og Charli XCX og Jónsa úr Sigur Rós.</p>
+                    </div>
+
+                    <div class="section credits">
+                        <h4>Einingar</h4>
+                        <p>Samið og útsett af <a href="https://www.instagram.com/jdkarmitage/" target="_blank">Jack Armitage</a></p>
+                        <p>Hljóðritað með <a href="https://www.instagram.com/essteb/" target="_blank">Celeste Betancur</a></p>
+                        <p>Hljóðblöndun og hljóðjöfnun: <a href="https://www.instagram.com/joshua.sdxsn/" target="_blank">Josh Wilkinson</a></p>
+                        <p>Mynd: <a href="https://www.instagram.com/arnabeth" target="_blank">Arna Beth</a></p>
+                        <p>Texti: <a href="https://www.instagram.com/mariaebragadottir/" target="_blank">María Elísabet Bragadóttir</a></p>
+                        <p>Magnetic Resonator Piano: <a href="https://andrewmcpherson.org/" target="_blank">Andrew McPherson</a></p>
+                        <p>Vínyll: <a href="http://fishfactory.is/" target="_blank">Fish Factory Creative Centre of Stöðvarfjörður</a></p>
+                        <p><a href="http://tolvera.is" target="_blank">Tölvera</a> búið til í <a href="https://www.instagram.com/intelligentinstruments/" target="_blank">Intelligent Instruments Lab</a></p>
+                        <p>Stutt af Tónlistarmiðstöð</p>
+                        <p>Ljósmyndun: <a href="https://www.instagram.com/vikrampradhan_" target="_blank">Vikram Pradhan</a></p>
+                    </div>
+
+                    <div class="section">
+                        <h4>Samband</h4>
+                        <p>Fyrir beiðnir um viðtal, umsagnareintök og frekari upplýsingar:</p>
+                        <p><a href="mailto:ja@xn--6ca.is">ja@æ.is</a> | +354 779 8943</p>
+                        <p><a href="http://jackarmitage.com" target="_blank">jackarmitage.com</a> | <a href="http://instagram.com/jdkarmitage" target="_blank">@jdkarmitage</a></p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <div class="iframe-container">
-        <iframe style="border: 0; width: 100%; height: 42px;" src="https://bandcamp.com/EmbeddedPlayer/album=621887422/size=small/bgcol=333333/linkcol=ffffff/artwork=none/transparent=true/" seamless><a href="https://omricohencomposer.bandcamp.com/album/event-horizon">Event Horizon by Omri Cohen</a></iframe>
+        <iframe style="border: 0; width: 100%; height: 42px;" src="https://bandcamp.com/EmbeddedPlayer/album=1594459342/size=small/bgcol=333333/linkcol=ffffff/artwork=none/transparent=true/" seamless><a href="https://jackarmitage.bandcamp.com/album/strengjavera">Strengjavera by Jack Armitage</a></iframe>
     </div>
+    <script>
+        function switchLang(lang) {
+            // Hide all content
+            document.querySelectorAll('.lang-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Remove active state from all buttons
+            document.querySelectorAll('.lang-switcher button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected language content
+            document.getElementById('content-' + lang).classList.add('active');
+            
+            // Activate selected button
+            document.getElementById('btn-' + lang).classList.add('active');
+            
+            // Update lang attribute
+            document.documentElement.lang = lang;
+            
+            // Save preference
+            localStorage.setItem('lang', lang);
+        }
+        
+        // Load saved language preference on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('lang');
+            if (savedLang && savedLang !== 'en') {
+                switchLang(savedLang);
+            }
+        });
+    </script>
 </body>
 </html>
